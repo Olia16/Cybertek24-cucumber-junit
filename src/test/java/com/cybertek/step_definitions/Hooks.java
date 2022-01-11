@@ -24,7 +24,7 @@ public class Hooks {
         }
 
         System.out.println("AFTER - tearDown method is running after the scenario:" + scenario.getName());
-        Driver.closeDriver();
+       // Driver.closeDriver();
     }
 //    How to take screenshot of each step to save as execution evidence:
 //    We can use @AfterStep annotation in Hooks class:

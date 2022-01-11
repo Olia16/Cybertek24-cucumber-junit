@@ -69,7 +69,7 @@ public class VyTrackLoginDDTTest {
             }
 
             dashboardPage.logout();
-            BrowserUtils.sleep(1);
+            BrowserUtils.sleep(2);
 
         }
         //save changes
@@ -80,6 +80,7 @@ public class VyTrackLoginDDTTest {
 
 
 
+//method accepts param.-xpath and return Webelement
 
 
 

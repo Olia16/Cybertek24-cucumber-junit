@@ -13,8 +13,8 @@ import org.junit.runner.RunWith;
         },
         features = "src/test/resources/features",
         glue = "com/cybertek/step_definitions",
-        dryRun = false
-       // tags = "@rerun"
+        dryRun = false,
+        tags = "@Mockaroo"
 )
 public class CukesRunner {
 
