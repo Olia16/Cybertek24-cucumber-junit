@@ -41,6 +41,12 @@ public class GoogleStepDefinitions {
         }
     }
 
+    @Then("User should see {string}in the result")
+    public void userShouldSeeInTheResult(String capitalCity) {
+        System.out.println("expected Capital city name: " + capitalCity);
+        Assert.assertEquals(capitalCity, googleSearchPage.searchResultCityName.getText());
+    }
+
     @When("User searches for {string}capital")
     public void userSearchesForCapital(String countryName) {
         System.out.println("Searching for capital city of " + countryName);
@@ -48,9 +54,5 @@ public class GoogleStepDefinitions {
 
     }
 
-    @Then("User should see {string}in the result")
-    public void userShouldSeeInTheResult(String capitalCity) {
-        System.out.println("expected Capital city name: " + capitalCity);
-        Assert.assertEquals(capitalCity, googleSearchPage.searchResultCityName.getText());
-    }
+
 }

@@ -34,6 +34,9 @@ public class MockarooPage {
     @FindBy(xpath = "//table/tbody/tr")
     public List<WebElement>tableRows;
 
+    @FindBy(xpath = "//span[.='Download Data']")
+    public WebElement downloadButton;
+
 
     public void changeRows(int num){
         BrowserUtils.scrollDown(500);
