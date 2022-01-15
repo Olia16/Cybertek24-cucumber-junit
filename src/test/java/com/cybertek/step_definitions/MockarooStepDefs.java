@@ -4,6 +4,7 @@ import com.cybertek.pages.MockarooPage;
 import com.cybertek.utils.BrowserUtils;
 import com.cybertek.utils.ConfigurationReader;
 import com.cybertek.utils.Driver;
+import com.cybertek.utils.ExcelUtil;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -28,39 +29,44 @@ public class MockarooStepDefs {
 
 
     }
+
     @Given("Number of rows is {int}")
     public void number_of_rows_is(Integer rowsCount) {
         mockarooPage.changeRows(rowsCount);
 
     }
+
     @Given("Format is Excel")
     public void format_is_excel() {
-    mockarooPage.selectExcelFormat();
+        mockarooPage.selectExcelFormat();
 
     }
+
     @When("User clicks on preview")
     public void user_clicks_on_preview() {
         mockarooPage.preview.click();
 
     }
+
     @Then("following columns should be displayed:")
-    public void following_columns_should_be_displayed(List<String>expectedColumns) {
+    public void following_columns_should_be_displayed(List<String> expectedColumns) {
         System.out.println("Expected Columns" + expectedColumns);
 
         //read text of each header and store it into actualColumns
-        List<String>actualColumns =  new ArrayList<>();
-        for(WebElement headerName : mockarooPage.headers){
-           actualColumns.add(headerName.getText());
+        List<String> actualColumns = new ArrayList<>();
+        for (WebElement headerName : mockarooPage.headers) {
+            actualColumns.add(headerName.getText());
         }
         //using method from utils to convert WebElement into String and store to list
-        List<String>actualHeaderNames = BrowserUtils.getElementsText(mockarooPage.headers);
-        Assert.assertEquals(expectedColumns,actualColumns);
+        List<String> actualHeaderNames = BrowserUtils.getElementsText(mockarooPage.headers);
+        Assert.assertEquals(expectedColumns, actualColumns);
         Assert.assertEquals(expectedColumns, actualHeaderNames);
 
     }
+
     @Then("{int} rows of data should be displayed")
     public void rows_of_data_should_be_displayed(int expectedRowsCount) {
-Assert.assertEquals(expectedRowsCount,mockarooPage.tableRows.size());
+        Assert.assertEquals(expectedRowsCount, mockarooPage.tableRows.size());
     }
 
     @When("User clicks on download")
@@ -72,29 +78,43 @@ Assert.assertEquals(expectedRowsCount,mockarooPage.tableRows.size());
     int excelFileRowsCount;
 
     @Then("following columns should be displayed in excel file:")
-    public void followingColumnsShouldBeDisplayedInExcelFile(List<String> expectedColumns)  throws Exception {
+    public void followingColumnsShouldBeDisplayedInExcelFile(List<String> expectedColumns) throws Exception {
         //Open downloaded excel file
         String filePath = System.getProperty("user.home") + "/Downloads/MOCK_DATA.xlsx";
-        FileInputStream in = new FileInputStream(filePath);
-        XSSFWorkbook workbook = new XSSFWorkbook(in);
-        XSSFSheet worksheet = workbook.getSheetAt(0);
-        //get number of column names. top row and cells count
-        int excelHeadersCount = worksheet.getRow(0).getPhysicalNumberOfCells();
-        excelFileRowsCount = worksheet.getLastRowNum();
+        ExcelUtil excel = new ExcelUtil(filePath, "data");
+        Assert.assertEquals(expectedColumns, excel.getColumnsNames());
 
-        List<String> actualColumns = new ArrayList<>();
-
-        //loop and read column names and store into List<String> actualColumns
-        for(int i = 0; i < excelHeadersCount; i++) {
-            actualColumns.add( worksheet.getRow(0).getCell(i).toString());
+//        FileInputStream in = new FileInputStream(filePath);
+//        XSSFWorkbook workbook = new XSSFWorkbook(in);
+//        XSSFSheet worksheet = workbook.getSheetAt(0);
+//        //get number of column names. top row and cells count
+//        int excelHeadersCount = worksheet.getRow(0).getPhysicalNumberOfCells();
+//        excelFileRowsCount = worksheet.getLastRowNum();
+//
+//        List<String> actualColumns = new ArrayList<>();
+//
+//        //loop and read column names and store into List<String> actualColumns
+//        for(int i = 0; i < excelHeadersCount; i++) {
+//            actualColumns.add( worksheet.getRow(0).getCell(i).toString());
+//        }
+//
+//        Assert.assertEquals(expectedColumns, actualColumns);
+//
+   }
+//
+        String filePath = System.getProperty("user.home") + "/Downloads/MOCK_DATA.xlsx";
+        @And("{int} rows of data should be displayed in excel file")
+        public void rowsOfDataShouldBeDisplayedInExcelFile ( int numberOfRows){
+            ExcelUtil excel = new ExcelUtil(filePath,"data");
+            excelFileRowsCount = excel.rowCount();
+            Assert.assertEquals(numberOfRows, excelFileRowsCount);
         }
 
-        Assert.assertEquals(expectedColumns, actualColumns);
-
-    }
-
-    @And("{int} rows of data should be displayed in excel file")
-    public void rowsOfDataShouldBeDisplayedInExcelFile(int numberOfRows) {
-        Assert.assertEquals(numberOfRows , excelFileRowsCount);
+    @And("data should be present in excel file")
+    public void dataShouldBePresentInExcelFile() {
+        //open excel file, read data and print values
+        ExcelUtil excel = new ExcelUtil(filePath,"data");
+        System.out.println("Excel file date: " + excel.getDataList());
     }
 }
+

@@ -1,4 +1,4 @@
-@a and not @google
+@google
   Feature: Passing multiple parameters to the step
     Scenario:
       Given User is on the google home page
